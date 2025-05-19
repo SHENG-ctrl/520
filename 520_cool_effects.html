@@ -1,0 +1,204 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>柳艳玲，我爱你</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      font-family: '微软雅黑', sans-serif;
+      background: black;
+      color: white;
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    .content {
+      position: absolute;
+      z-index: 10;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #ff6699;
+      animation: rotate3D 10s linear infinite;
+    }
+
+    #typewriter {
+      margin-top: 30px;
+      font-size: 1.5em;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      white-space: pre-wrap;
+      color: #fff;
+      text-shadow: 0 0 10px #f0f;
+    }
+
+    @keyframes rotate3D {
+      from { transform: rotateY(0deg); }
+      to { transform: rotateY(360deg); }
+    }
+
+    .balloon {
+      position: absolute;
+      bottom: -150px;
+      width: 40px;
+      height: 50px;
+      background: pink;
+      border-radius: 50% 50% 50% 50%;
+      animation: float 10s linear infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(-150vh); }
+    }
+
+    /* 烟雾背景动画 */
+    .glow {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(255,182,193,0.2), transparent 70%);
+      animation: pulse 5s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); opacity: 0.2; }
+      to { transform: scale(1.5); opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+  <div class="content">
+    <h1>柳艳玲，我爱你 ❤️</h1>
+    <div id="typewriter"></div>
+  </div>
+
+  <!-- 背景音乐 -->
+  <audio autoplay loop>
+    <source src="https://music.163.com/song/media/outer/url?id=28815250.mp3" type="audio/mpeg">
+  </audio>
+
+  <canvas id="bg"></canvas>
+  <canvas id="stars"></canvas>
+
+  <script>
+    // 手写打字效果
+    const message = `
+520快乐，我亲爱的柳艳玲：
+
+从认识你的那一刻起，我的世界就被悄悄点亮了。
+你温柔、聪明、可爱，是我生命中最温暖的存在。
+
+今天我想大声告诉你：
+柳艳玲，我真的真的很爱你！
+
+未来的路，还请你继续陪我一起走，不论风雨，我都愿意与你并肩。
+
+—— 永远爱你的 盛叶 💌
+    `;
+    const el = document.getElementById('typewriter');
+    let i = 0;
+    function typeWriter() {
+      if (i < message.length) {
+        el.innerHTML += message.charAt(i++);
+        setTimeout(typeWriter, 60);
+      }
+    }
+    typeWriter();
+
+    // 星空粒子效果 + 流星
+    const canvas = document.getElementById("bg");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const starsCanvas = document.getElementById("stars");
+    const starsCtx = starsCanvas.getContext("2d");
+    starsCanvas.width = window.innerWidth;
+    starsCanvas.height = window.innerHeight;
+
+    let particles = [];
+    for (let i = 0; i < 100; i++) {
+      particles.push({
+        x: Math.random() * starsCanvas.width,
+        y: Math.random() * starsCanvas.height,
+        radius: Math.random() * 1.5,
+        alpha: Math.random()
+      });
+    }
+
+    function drawStars() {
+      starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+      for (let p of particles) {
+        starsCtx.beginPath();
+        starsCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        starsCtx.fillStyle = "rgba(255,255,255," + p.alpha + ")";
+        starsCtx.fill();
+      }
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // 鼠标心形粒子拖尾
+    let heartParticles = [];
+    document.addEventListener('mousemove', e => {
+      heartParticles.push({x: e.clientX, y: e.clientY, alpha: 1});
+    });
+
+    function drawHearts() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      heartParticles = heartParticles.filter(p => p.alpha > 0);
+      heartParticles.forEach(p => {
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = "#ff69b4";
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.arc(p.x, p.y, 6, 0, Math.PI * 2);
+        ctx.fill();
+        p.alpha -= 0.02;
+      });
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(drawHearts);
+    }
+    drawHearts();
+
+    // 爱心点击爆炸
+    document.addEventListener('click', e => {
+      for (let i = 0; i < 30; i++) {
+        heartParticles.push({
+          x: e.clientX,
+          y: e.clientY,
+          alpha: 1,
+          dx: (Math.random() - 0.5) * 6,
+          dy: (Math.random() - 0.5) * 6
+        });
+      }
+    });
+
+    setInterval(() => {
+      const balloon = document.createElement("div");
+      balloon.className = "balloon";
+      balloon.style.left = Math.random() * window.innerWidth + "px";
+      balloon.style.background = `hsl(${Math.random() * 360}, 70%, 80%)`;
+      document.body.appendChild(balloon);
+      setTimeout(() => balloon.remove(), 12000);
+    }, 500);
+  </script>
+</body>
+</html>
