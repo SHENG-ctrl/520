@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>柳艳玲，我爱你</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      font-family: '微软雅黑', sans-serif;
+      color: #fff;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.8em;
+      margin-top: 80px;
+      animation: fadeIn 2s ease-in-out;
+      color: #ff6699;
+    }
+
+    #typewriter {
+      font-size: 1.5em;
+      width: 90%;
+      margin: 30px auto;
+      min-height: 200px;
+      white-space: pre-wrap;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #heartSvg {
+      width: 120px;
+      margin: 20px auto;
+      display: block;
+      animation: beat 1s infinite;
+    }
+
+    @keyframes beat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <h1>柳艳玲，我爱你 ❤️</h1>
+  <svg id="heartSvg" viewBox="0 0 32 29.6">
+    <path d="M23.6,0C20.4,0,18,2.4,16,4.9C14,2.4,11.6,0,8.4,0C3.8,0,0,3.8,0,8.4
+    c0,9.6,16,21.2,16,21.2s16-11.6,16-21.2C32,3.8,28.2,0,23.6,0z" fill="#ff3366"/>
+  </svg>
+  <div id="typewriter"></div>
+
+  <audio autoplay loop>
+    <source src="https://music.163.com/song/media/outer/url?id=28815250.mp3" type="audio/mpeg">
+    您的浏览器不支持音频播放
+  </audio>
+
+  <canvas id="stars"></canvas>
+  <canvas id="meteors"></canvas>
+  <canvas id="fireworks"></canvas>
+  <canvas id="hearts"></canvas>
+  <canvas id="bubbles"></canvas>
+
+  <script>
+    // 打字机效果
+    const message = `
+520快乐，我亲爱的柳艳玲：
+
+从认识你的那一刻起，
+我的世界就被悄悄点亮了。
+你温柔、聪明、可爱，
+是我生命中最温暖的存在。
+
+今天我想大声告诉你：
+柳艳玲，我真的真的很爱你！
+
+未来的路，还请你继续陪我一起走，
+不论风雨，我都愿意与你并肩。
+
+—— 永远爱你的 盛叶 💌
+    `;
+    const el = document.getElementById('typewriter');
+    let index = 0;
+    function typeWriter() {
+      if (index < message.length) {
+        el.innerHTML += message.charAt(index++);
+        setTimeout(typeWriter, 60);
+      }
+    }
+    typeWriter();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/gh/stevenlei/520effects@main/effects_bundle.js"></script>
+</body>
+</html>
